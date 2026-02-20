@@ -1,65 +1,131 @@
-import Image from "next/image";
+'use client';
+import { useEffect, useState, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+import '@/styles/Page.css';
 
-export default function Home() {
+// Components
+import LoadingScreen from '@/components/ui/LoadingScreen';
+import CustomCursor from '@/components/ui/CustomCursor';
+import Hero from '@/components/sections/Hero';
+import About from '@/components/sections/Abouts';
+import Skills from '@/components/sections/Skills';
+import Projects from '@/components/sections/Projects';
+import Contact from '@/components/sections/Contact';
+
+gsap.registerPlugin(ScrollTrigger);
+
+function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const lenisRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    if (!isLoading) {
+      // Initialize Lenis smooth scroll
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+      });
+
+      lenisRef.current = lenis;
+
+      // Connect Lenis to GSAP ScrollTrigger
+      lenis.on('scroll', ScrollTrigger.update);
+
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+
+      gsap.ticker.lagSmoothing(0);
+
+      // Refresh ScrollTrigger after layout settles
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
+    }
+
+    return () => {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+    };
+  }, [isLoading]);
+
+  // Global scroll snap for pinned sections
+  useEffect(() => {
+    if (isLoading) return;
+
+    // Wait for all ScrollTriggers to be created
+    const timeout = setTimeout(() => {
+      const pinned = ScrollTrigger.getAll()
+        .filter(st => st.vars.pin)
+        .sort((a, b) => a.start - b.start);
+      
+      const maxScroll = ScrollTrigger.maxScroll(window);
+      
+      if (!maxScroll || pinned.length === 0) return;
+
+      const pinnedRanges = pinned.map(st => ({
+        start: st.start / maxScroll,
+        end: (st.end ?? st.start) / maxScroll,
+        center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
+      }));
+
+      ScrollTrigger.create({
+        snap: {
+          snapTo: (value: number) => {
+            const inPinned = pinnedRanges.some(r => value >= r.start - 0.02 && value <= r.end + 0.02);
+            if (!inPinned) return value;
+
+            const target = pinnedRanges.reduce((closest, r) =>
+              Math.abs(r.center - value) < Math.abs(closest - value) ? r.center : closest,
+              pinnedRanges[0]?.center ?? 0
+            );
+            return target;
+          },
+          duration: { min: 0.15, max: 0.35 },
+          delay: 0,
+          ease: "power2.out"
+        }
+      });
+    }, 500);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [isLoading]);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      {/* Loading Screen */}
+      {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
+      
+      {/* Custom Cursor */}
+      <CustomCursor />
+      
+      {/* Grain Overlay */}
+      <div className="grain-overlay" />
+      
+      {/* Main Content */}
+      <main className="relative">
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
       </main>
-    </div>
+    </>
   );
 }
+
+export default App;
