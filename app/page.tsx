@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import '@/styles/Page.css';
+import './globals.css';
 
 // Components
 import LoadingScreen from '@/components/ui/LoadingScreen';
@@ -11,7 +11,7 @@ import CustomCursor from '@/components/ui/CustomCursor';
 import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/Abouts';
 import Skills from '@/components/sections/Skills';
-import Projects from '@/components/sections/Projects';
+import ProjectList from '@/components/sections/ProjectList';
 import Contact from '@/components/sections/Contact';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -121,7 +121,7 @@ function App() {
         <Hero />
         <About />
         <Skills />
-        <Projects />
+        <ProjectList />
         <Contact />
       </main>
     </>

@@ -4,12 +4,13 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
-import projects from '@/data/Projects';
+import { projects } from '@/lib/data';
+import Link from 'next/link';
 
 gsap.registerPlugin(ScrollTrigger);
 
 
-export default function Projects() {
+export default function ProjectList() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -92,7 +93,7 @@ export default function Projects() {
         
         {/* Projects List */}
         <div className="space-y-24 md:space-y-32">
-          {projects.map((project, index) => (
+          {projects.map((project: (typeof projects)[number], index: number) => (
             <div
               key={project.id}
               ref={el => { projectRefs.current[index] = el; }}
@@ -100,13 +101,19 @@ export default function Projects() {
                 index % 2 === 1 ? 'lg:flex-row-reverse' : ''
               }`}
             >
+              <h3 className="text-project text-white font-bold tracking-tight group cursor-pointer">
+  <Link href={`/projects/${project.id}`} className="inline-flex items-center gap-4 hover:gap-6 transition-all duration-300">
+    {project.title}
+    <ArrowUpRight className="w-8 h-8 text-white/50 group-hover:text-white transition-colors" />
+  </Link>
+</h3>
               {/* Image */}
               <div 
                 className={`project-content ${index % 2 === 1 ? 'lg:order-2' : ''}`}
               >
                 <div className="project-image-wrapper relative aspect-16/10 overflow-hidden rounded-lg bg-white/5">
                   <img
-                    src={project.image}
+                    src={project.coverImage || ''}
                     alt={project.title}
                     className="project-image absolute inset-0 w-full h-full object-cover will-change-transform"
                   />
@@ -144,7 +151,7 @@ export default function Projects() {
                   
                   {/* Tags */}
                   <div className="flex flex-wrap gap-3 pt-4">
-                    {project.tags.map((tag) => (
+                    {project.tags && project.tags.map((tag) => (
                       <span 
                         key={tag}
                         className="px-4 py-2 border border-white/20 rounded-full text-white/60 text-sm hover:border-white/40 hover:text-white transition-colors cursor-default"
