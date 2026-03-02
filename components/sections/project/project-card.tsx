@@ -1,4 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
 
-export function
+import { projects } from "@/lib/data";
+
+export function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+    return <div>ProjectCard</div>;
+}

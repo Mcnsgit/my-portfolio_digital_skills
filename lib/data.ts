@@ -1,6 +1,6 @@
 // lib/data.ts
 
-interface Project {
+export interface Project {
   id: string;
   title: string;
   category: string;
