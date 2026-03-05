@@ -123,7 +123,7 @@ export default function Hero() {
             ref={miguelRef}
             className="overflow-hidden will-change-transform"
           >
-            <h1 className="text-hero-mobile md:text-hero text-white font-bold tracking-tighter text-center leading-none">
+            <h1 className="text-hero">
               {renderLetters('MIGUEL')}
             </h1>
           </div>
@@ -133,7 +133,7 @@ export default function Hero() {
             ref={cardigaRef}
             className="overflow-hidden will-change-transform"
           >
-            <h1 className="text-hero-mobile md:text-hero text-white font-bold tracking-tighter text-center leading-none">
+            <h1 className="text-hero">
               {renderLetters('CARDIGA')}
             </h1>
           </div>
@@ -144,7 +144,7 @@ export default function Hero() {
           ref={subtitleRef}
           className="mt-8 md:mt-12 overflow-hidden"
         >
-          <p className="text-white/80 text-lg md:text-2xl font-light tracking-widest uppercase">
+          <p className="text-hero">
             Creative Developer
           </p>
         </div>

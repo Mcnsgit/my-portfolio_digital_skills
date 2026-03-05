@@ -40,7 +40,7 @@ export default function ProjectClient({ slug }: { slug: string }) {
       <div className="pt-12 px-6 md:px-16 lg:px-24 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-24">
-          <p className="text-zinc-500 mb-4 uppercase tracking-widest text-sm">{project.category} / {project.role}</p>
+        <p className="text-zinc-400 mb-4 uppercase tracking-widest text-sm font-semibold">{project.category} / {project.role}</p>
           <div className="overflow-hidden">
             <h1 ref={titleRef} className="text-5xl md:text-[8vw] leading-[0.9] font-bold tracking-tighter uppercase mb-8">
               {project.title}
@@ -102,7 +102,10 @@ export default function ProjectClient({ slug }: { slug: string }) {
                       </li>
                     ))}
                   </ul>
-                  <button onClick={() => setShowPDF(!showPDF)} className="px-8 py-4 bg-white text-zinc-950 font-bold tracking-wide hover:bg-zinc-300 transition-colors flex items-center gap-3 rounded-full">
+                  <button 
+                  onClick={() => setShowPDF(!showPDF)} 
+                  className="px-8 py-4 bg-white text-zinc-950 font-bold tracking-wide hover:bg-zinc-300 transition-colors flex items-center gap-3 rounded-full outline-none focus-visible:ring-4 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  aria-label={showPDF ? 'Close Audit' : 'Read Full Audit'}>
                     {showPDF ? 'CLOSE AUDIT' : 'READ FULL AUDIT'} <ArrowUpRight size={18} />
                   </button>
                 </div>

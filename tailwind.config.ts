@@ -65,10 +65,10 @@ const config: Config = {
         display: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       fontSize: {
-        'hero': ['15vw', { lineHeight: '0.9', letterSpacing: '-0.03em' }],
-        'hero-mobile': ['18vw', { lineHeight: '0.9', letterSpacing: '-0.03em' }],
-        'section': ['8vw', { lineHeight: '1', letterSpacing: '-0.02em' }],
-        'project': ['4vw', { lineHeight: '1.1', letterSpacing: '-0.01em' }],
+        'hero': ['clamp(4rem, 12vw, 9rem)', { lineHeight: '0.9', letterSpacing: '-0.05em' }],
+        'hero-mobile': ['clamp(3rem, 18vw, 6rem)', { lineHeight: '0.9', letterSpacing: '-0.04em' }],
+        'section': ['clamp(2.5rem, 8vw, 5rem)', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
+        'project': ['clamp(2rem, 6vw, 4rem)', { lineHeight: '1.05', letterSpacing: '-0.02em' }],
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",
