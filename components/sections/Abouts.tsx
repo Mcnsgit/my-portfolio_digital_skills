@@ -1,3 +1,4 @@
+//components/sections/Abouts.tsx
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -18,47 +19,53 @@ export default function About() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=150%',
+          end: '+=350%',
           pin: true,
-          scrub: 0.5,
+          scrub: 1,
         }
       });
 
       // Entrance: Background slides up
       scrollTl.fromTo(bgRef.current,
         { y: '100%' },
-        { y: '0%', ease: 'none' },
+        { y: '0%', duration: 1,ease: 'none' },
         0
       );
 
-      // Heading slides in
       scrollTl.fromTo(headingRef.current,
-        { x: -100, opacity: 0 },
-        { x: 0, opacity: 1, ease: 'none' },
-        0.1
+        { x: -50, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1, ease: 'power2.out' },
+        0.3
       );
 
-      // Text fades in
-      scrollTl.fromTo(textRef.current,
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, ease: 'none' },
-        0.15
-      );
-
-      // Portrait circle mask expands
       scrollTl.fromTo(imageRef.current,
         { clipPath: 'circle(0% at 50% 50%)' },
-        { clipPath: 'circle(75% at 50% 50%)', ease: 'none' },
-        0.1
+        { clipPath: 'circle(100% at 50% 50%)', duration: 1.2, ease: 'power2.inOut' },
+        0.3
       );
 
-      // Exit: Everything fades out
+      scrollTl.fromTo(textRef.current,
+        { y: 100, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power2.out' },
+        0.5
+      );
+
+      // --- PHASE 2: THE "READING PAUSE" ---
+      scrollTl.to(textRef.current, { y: -350, duration: 2.5, ease: 'none' }, 1.5);
+        
+      // Parallax effect: The image moves up too, but slightly slower than the text
+      scrollTl.to(imageContainerRef.current, { y: -80, duration: 2.5, ease: 'none' }, 1.5);
+      scrollTl.to(headingRef.current, { y: -40, duration: 2.5, ease: 'none' }, 1.5);
+
+      // --- PHASE 3: EXIT ---
+      // Everything fades out gracefully
       scrollTl.to([headingRef.current, textRef.current, imageContainerRef.current],
-        { opacity: 0, ease: 'none' },
-        0.7
+        { opacity: 0, duration: 1, ease: 'power2.inOut' },
+        4.0 // Starts after the active scroll phase finishes
       );
 
     }, sectionRef);
+
 
     return () => ctx.revert();
   }, []);
@@ -90,21 +97,17 @@ export default function About() {
               
               <div ref={textRef} className="space-y-6 will-change-transform">
                 <p className="text-dark/80 text-lg md:text-xl leading-relaxed">
-                  I am a multidisciplinary creative developer based in London, specializing in building 
-                  immersive digital experiences that bridge the gap between visual aesthetics and 
-                  technical functionality.
+                Multidisciplinary digital professional with 5+ years of experience delivering content strategy, brand identity, accessibility compliance, and user-centered design for nonprofits, social enterprises, and small businesses. Passionate about creating measurable impact through storytelling, community engagement, and inclusive digital experiences, with a focus on WCAG standards and mission-driven solutions that connect and inspire.
                 </p>
                 
                 <p className="text-dark/70 text-base md:text-lg leading-relaxed">
-                  With a background in both design and code, I create memorable interactions that 
-                  leave a lasting impact. My work spans brand identity, web development, and motion 
-                  design — always with a focus on purpose-driven solutions.
+                  With a background in both editting, marketing and code, I create memorable interactions that 
+                  leave a lasting impact. My work spans brand identity, web development, and multimedia content design always with a focus on purpose-driven solutions.
                 </p>
                 
                 <p className="text-dark/60 text-base leading-relaxed">
                   Currently seeking opportunities in purpose-driven tech and creative roles where 
-                  I can contribute to meaningful projects while continuing to grow as a developer 
-                  and designer.
+                  I can contribute to meaningful projects while continuing to grow developer and editting skills.
                 </p>
                 
                 <div className="pt-6 flex flex-wrap gap-4">
@@ -112,7 +115,7 @@ export default function About() {
                     <span className="text-dark/70 text-sm">5+ Years Experience</span>
                   </div>
                   <div className="px-4 py-2 border border-dark/20 rounded-full">
-                    <span className="text-dark/70 text-sm">London, UK</span>
+                    <span className="text-dark/70 text-sm">Greater Manchester, UK</span>
                   </div>
                   <div className="px-4 py-2 border border-dark/20 rounded-full">
                     <span className="text-dark/70 text-sm">Open to Work</span>

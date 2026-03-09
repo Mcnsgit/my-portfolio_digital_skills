@@ -1,8 +1,10 @@
+//components/sections/Hero.tsx
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,91 +16,82 @@ export default function Hero() {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Initial reveal animation
-      const tl = gsap.timeline({ delay: 1.5 });
-      
-      // Split text animation for MIGUEL
-      const miguelLetters = miguelRef.current?.querySelectorAll('.letter');
-      if (miguelLetters) {
-        tl.fromTo(miguelLetters, 
-          { y: '100%', opacity: 0 },
-          { y: '0%', opacity: 1, duration: 1, stagger: 0.05, ease: 'power3.out' },
-          0
-        );
-      }
-      
-      // Split text animation for CARDIGA
-      const cardigaLetters = cardigaRef.current?.querySelectorAll('.letter');
-      if (cardigaLetters) {
-        tl.fromTo(cardigaLetters,
-          { y: '100%', opacity: 0 },
-          { y: '0%', opacity: 1, duration: 1, stagger: 0.05, ease: 'power3.out' },
-          0.2
-        );
-      }
-      
-      // Subtitle fade in
-      tl.fromTo(subtitleRef.current,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
-        0.8
-      );
-      
-      // Scroll indicator
-      tl.fromTo(scrollIndicatorRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.6 },
-        1
-      );
+  useIsomorphicLayoutEffect(() => {
+    let mm = gsap.matchMedia();
 
-      // Scroll-driven exit animation
-      const scrollTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '+=100%',
-          pin: true,
-          scrub: 0.5,
+    // 1. Accessibility: Only run animations if user allows motion
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      
+      // 2. Context automatically cleans up GSAP on unmount/route change
+      let ctx = gsap.context(() => {
+        
+        const tl = gsap.timeline({ delay: 0.2 }); // Sped up the start delay slightly
+        
+        // Split text animation for MIGUEL
+        const miguelLetters = miguelRef.current?.querySelectorAll('.letter');
+        if (miguelLetters) {
+          tl.fromTo(miguelLetters, 
+            { y: '100%', opacity: 0 },
+            { y: '0%', opacity: 1, duration: 1, stagger: 0.05, ease: 'power3.out' },
+            0
+          );
         }
-      });
+        
+        // Split text animation for CARDIGA
+        const cardigaLetters = cardigaRef.current?.querySelectorAll('.letter');
+        if (cardigaLetters) {
+          tl.fromTo(cardigaLetters,
+            { y: '100%', opacity: 0 },
+            { y: '0%', opacity: 1, duration: 1, stagger: 0.05, ease: 'power3.out' },
+            0.2
+          );
+        }
+        
+        // Subtitle fade in
+        tl.fromTo(subtitleRef.current,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
+          0.8
+        );
+        
+        // Scroll indicator
+        tl.fromTo(scrollIndicatorRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.6 },
+          1
+        );
 
-      // Exit animation - names split apart
-      scrollTl.to(miguelRef.current, {
-        y: '-100vh',
-        ease: 'none',
-      }, 0);
+        // Scroll-driven exit animation
+        const scrollTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: '+=250%',
+            pin: true,
+            scrub: 1,
+          }
+        });
 
-      scrollTl.to(cardigaRef.current, {
-        y: '100vh',
-        ease: 'none',
-      }, 0);
+        // Exit animation - names split apart
+        scrollTl.to(miguelRef.current, { y: '-100vh', ease: 'none' }, 0);
+        scrollTl.to(cardigaRef.current, { y: '100vh', ease: 'none' }, 0);
+        scrollTl.to(subtitleRef.current, { opacity: 0, y: -50, ease: 'none', immediateRender: false }, 0);
+        scrollTl.to(scrollIndicatorRef.current, { opacity: 0, ease: 'none', immediateRender: false }, 0);
+        scrollTl.to(containerRef.current, { opacity: 0, ease: 'none' }, 0.5);
 
-      scrollTl.to(subtitleRef.current, {
-        opacity: 0,
-        ease: 'none',
-      }, 0);
+      }, sectionRef);
 
-      scrollTl.to(scrollIndicatorRef.current, {
-        opacity: 0,
-        ease: 'none',
-      }, 0);
+      return () => ctx.revert(); // Cleanup timeline
+    });
 
-      scrollTl.to(containerRef.current, {
-        opacity: 0,
-        ease: 'none',
-      }, 0.5);
-
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    return () => mm.revert(); // Cleanup matchMedia
+  });
 
   const renderLetters = (text: string) => {
     return text.split('').map((letter, index) => (
       <span 
         key={index} 
+        aria-hidden="true"
         className="letter inline-block"
         style={{ display: letter === ' ' ? 'inline' : 'inline-block' }}
       >
@@ -106,6 +99,7 @@ export default function Hero() {
       </span>
     ));
   };
+
 
   return (
     <section 
@@ -123,7 +117,7 @@ export default function Hero() {
             ref={miguelRef}
             className="overflow-hidden will-change-transform"
           >
-            <h1 className="text-hero">
+            <h1 aria-label="Miguel" className="text-hero text-foreground">
               {renderLetters('MIGUEL')}
             </h1>
           </div>
@@ -133,7 +127,7 @@ export default function Hero() {
             ref={cardigaRef}
             className="overflow-hidden will-change-transform"
           >
-            <h1 className="text-hero">
+            <h1 aria-label="Cardiga" className="text-hero text-foreground">
               {renderLetters('CARDIGA')}
             </h1>
           </div>
@@ -144,7 +138,7 @@ export default function Hero() {
           ref={subtitleRef}
           className="mt-8 md:mt-12 overflow-hidden"
         >
-          <p className="text-hero">
+          <p aria-label="Creative Developer" className="text-hero text-foreground">
             Creative Developer
           </p>
         </div>
