@@ -1,13 +1,12 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 const config: Config = {
   darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./data/**/*.{js,ts,jsx,tsx,mdx}",      
     "./lib/**/*.{js,ts,jsx,tsx,mdx}",
-    "./styles/**/*.{css,scss,sass,less,styl,stylus}",
     "./hooks/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
@@ -56,13 +55,18 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        dark: "#0D0D0D",
-        light: "#F5F5F5",
-        steel: "#4A6C8C",
+        dark: "var(--color-dark)",
+        "dark-elevated": "var(--color-dark-elevated)",
+        light: "var(--color-light)",
+        steel: "var(--color-steel)",
+        "foreground-muted": "var(--color-foreground-muted)",
+        "surface-foreground-muted": "var(--color-surface-foreground-muted)",
+        "on-dark": "var(--color-on-dark)",
+        "on-dark-muted": "var(--color-on-dark-muted)",
       },
       fontFamily: {
-        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        display: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-sans)', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'hero': ['clamp(4rem, 12vw, 9rem)', { lineHeight: '0.9', letterSpacing: '-0.05em' }],
@@ -81,6 +85,7 @@ const config: Config = {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
       },
       keyframes: {
+        /* Radix Accordion: height animation (consider grid-template-rows for perf) */
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -93,9 +98,9 @@ const config: Config = {
           "0%,70%,100%": { opacity: "1" },
           "20%,50%": { opacity: "0" },
         },
-        "bounce-subtle": {
+        "scroll-hint-float": {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(10px)" },
+          "50%": { transform: "translateY(-6px)" },
         },
         "line-draw": {
           "0%": { transform: "scaleY(0)" },
@@ -106,12 +111,12 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
-        "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
+        "scroll-hint-float": "scroll-hint-float 2.5s cubic-bezier(0.22, 1, 0.36, 1) infinite",
         "line-draw": "line-draw 1.5s ease-out forwards",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 }
 
 export default config;

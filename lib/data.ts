@@ -42,7 +42,7 @@ export const projects: Project[] =[
     type: 'visual', 
     assets: {
       pdfUrl: '/pdfs/indigo-guidelines.pdf',
-      gallery:['/images/indigo-1.jpg', '/images/indigo-2.jpg', '/images/indigo-3.jpg']
+      gallery:['/images/indigo-cover.jpg'] // Updated to use existing cover as fallback
     }
   },
   {
@@ -56,8 +56,8 @@ export const projects: Project[] =[
     type: 'visual',
     assets: {
       pdfUrl: '/pdfs/mcnasty-case-study.pdf',
-      gallery:['/images/mc-1.jpg', '/images/mc-2.jpg'],
-      image: '/images/mcnasty-hero.jpg'
+      gallery:['/images/mcnasty-cover.jpg'],
+      image: '/images/mcnasty-cover.jpg'
     },
     metrics: ['103k monthly Pinterest views', 'Verified merchant status']
   },
@@ -67,11 +67,11 @@ export const projects: Project[] =[
     category: 'Video & Communications',
     role: 'Video & Communications Lead',
     description: 'Developed testimonial video strategy shifting messaging to impact storytelling, directly supporting successful fundraising efforts.',
-    coverImage: '/images/northern-lights.jpg',
+    coverImage: '/images/northern-lights-cover.png',
     tags: ['Video Production', 'Content Strategy', 'Storytelling'],
     type: 'visual',
     assets: {
-      gallery:['/images/nl-1.jpg', '/images/nl-2.jpg']
+      gallery:['/images/northern-lights.png']
     }
   }
 ];

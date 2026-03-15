@@ -1,23 +1,19 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Inter } from "next/font/google";
-// import CustomCursor from "@/components/ui/CustomCursor";
+import { DM_Sans, Syne } from "next/font/google";
 import SmoothScroll from "@/components/layout/SmoothScroll";
-const inter = Inter({
+
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-sans",
+  display: "swap",
 });
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: 'Miguel Cardiga | Creative Technologist',
@@ -48,12 +44,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} bg-background text-foreground antialiased`}>
+      <body className={`${dmSans.variable} ${syne.variable} font-sans bg-background text-foreground antialiased`}>
         
         {/* A11y Skip Link - Bulletproof focus states added */}
-        <a 
-          href="#main-content" 
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-9999 focus:px-6 focus:py-3 focus:bg-white focus:text-black focus:font-bold focus:rounded-md outline-none focus-visible:ring-4 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-9999 focus:px-6 focus:py-3 focus:bg-background focus:text-foreground focus:font-bold focus:rounded-md outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Skip to main content
         </a>

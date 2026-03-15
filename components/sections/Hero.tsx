@@ -17,13 +17,13 @@ export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useIsomorphicLayoutEffect(() => {
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
     // 1. Accessibility: Only run animations if user allows motion
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       
       // 2. Context automatically cleans up GSAP on unmount/route change
-      let ctx = gsap.context(() => {
+      const ctx = gsap.context(() => {
         
         const tl = gsap.timeline({ delay: 0.2 }); // Sped up the start delay slightly
         
@@ -112,25 +112,25 @@ export default function Hero() {
       >
         {/* Main Name */}
         <div className="relative w-full px-4">
-          {/* MIGUEL */}
-          <div 
-            ref={miguelRef}
-            className="overflow-hidden will-change-transform"
-          >
-            <h1 aria-label="Miguel" className="text-hero text-foreground">
+          <h1 aria-label="Miguel Cardiga" className="text-hero text-on-dark flex flex-col items-center">
+            {/* MIGUEL */}
+            <span 
+              ref={miguelRef}
+              aria-hidden="true"
+              className="overflow-hidden will-change-transform block"
+            >
               {renderLetters('MIGUEL')}
-            </h1>
-          </div>
-          
-          {/* CARDIGA */}
-          <div 
-            ref={cardigaRef}
-            className="overflow-hidden will-change-transform"
-          >
-            <h1 aria-label="Cardiga" className="text-hero text-foreground">
+            </span>
+
+            {/* CARDIGA */}
+            <span
+              ref={cardigaRef}
+              aria-hidden="true"
+              className="overflow-hidden will-change-transform block"
+            >
               {renderLetters('CARDIGA')}
-            </h1>
-          </div>
+            </span>
+          </h1>
         </div>
         
         {/* Subtitle */}
@@ -138,7 +138,7 @@ export default function Hero() {
           ref={subtitleRef}
           className="mt-8 md:mt-12 overflow-hidden"
         >
-          <p aria-label="Creative Developer" className="text-hero text-foreground">
+          <p aria-label="Creative Developer" className="text-hero text-on-dark">
             Creative Developer
           </p>
         </div>
@@ -148,9 +148,9 @@ export default function Hero() {
           ref={scrollIndicatorRef}
           className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
         >
-          <span className="text-white/60 text-xs uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-16 bg-white/30 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1/2 bg-white animate-bounce-subtle" />
+          <span className="text-on-dark-muted text-xs uppercase tracking-widest">Scroll</span>
+          <div className="w-px h-16 bg-on-dark/30 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1/2 bg-on-dark animate-scroll-hint-float" />
           </div>
         </div>
       </div>

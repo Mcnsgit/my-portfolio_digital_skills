@@ -68,8 +68,8 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
-      let proxy = { value: 0 }; // Create a proxy object to hold the number
+    const ctx = gsap.context(() => {
+      const proxy = { value: 0 }; // Create a proxy object to hold the number
       
       // Force the counter to take 2.5 seconds
       gsap.to(proxy, {
@@ -80,7 +80,10 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           setProgress(Math.round(proxy.value));
         },
         onComplete: () => {
-          // Fade out the loading screen before calling onComplete
+          if (!containerRef.current) {
+            onComplete();
+            return;
+          }
           gsap.to(containerRef.current, {
             opacity: 0,
             duration: 0.8,

@@ -1,9 +1,6 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
-import './globals.css';
+
+import { useState } from 'react';
 
 // Components
 import LoadingScreen from '@/components/ui/LoadingScreen';
@@ -14,92 +11,14 @@ import Skills from '@/components/sections/Skills';
 import ProjectList from '@/components/sections/ProjectList';
 import Contact from '@/components/sections/Contact';
 
-gsap.registerPlugin(ScrollTrigger);
+// Hooks
+import { useScrollSnap } from '@/hooks/useScrollSnap';
 
-function App() {
+export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const lenisRef = useRef<Lenis | null>(null);
 
-  useEffect(() => {
-    if (!isLoading) {
-      // Initialize Lenis smooth scroll
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 2,
-      });
-
-      lenisRef.current = lenis;
-
-      // Connect Lenis to GSAP ScrollTrigger
-      lenis.on('scroll', ScrollTrigger.update);
-
-      gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-      });
-
-      gsap.ticker.lagSmoothing(0);
-
-      // Refresh ScrollTrigger after layout settles
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 100);
-    }
-
-    return () => {
-      if (lenisRef.current) {
-        lenisRef.current.destroy();
-      }
-    };
-  }, [isLoading]);
-
-  // Global scroll snap for pinned sections
-  useEffect(() => {
-    if (isLoading) return;
-
-    // Wait for all ScrollTriggers to be created
-    const timeout = setTimeout(() => {
-      const pinned = ScrollTrigger.getAll()
-        .filter(st => st.vars.pin)
-        .sort((a, b) => a.start - b.start);
-      
-      const maxScroll = ScrollTrigger.maxScroll(window);
-      
-      if (!maxScroll || pinned.length === 0) return;
-
-      const pinnedRanges = pinned.map(st => ({
-        start: st.start / maxScroll,
-        end: (st.end ?? st.start) / maxScroll,
-        center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
-      }));
-
-      ScrollTrigger.create({
-        snap: {
-          snapTo: (value: number) => {
-            const inPinned = pinnedRanges.some(r => value >= r.start - 0.02 && value <= r.end + 0.02);
-            if (!inPinned) return value;
-
-            const target = pinnedRanges.reduce((closest, r) =>
-              Math.abs(r.center - value) < Math.abs(closest - value) ? r.center : closest,
-              pinnedRanges[0]?.center ?? 0
-            );
-            return target;
-          },
-          duration: { min: 0.15, max: 0.35 },
-          delay: 0,
-          ease: "power2.out"
-        }
-      });
-    }, 500);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [isLoading]);
+  // Activate scroll snapping once loading is complete
+  useScrollSnap(!isLoading);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -127,5 +46,3 @@ function App() {
     </>
   );
 }
-
-export default App;

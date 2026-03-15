@@ -1,21 +1,19 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
+import Image from 'next/image';
 import { projects } from '@/lib/data';
 import Link from 'next/link';
-
-gsap.registerPlugin(ScrollTrigger);
-
+import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
 
 export default function ProjectList() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // Heading animation
       gsap.fromTo(headingRef.current,
@@ -86,7 +84,7 @@ export default function ProjectList() {
         {/* Heading */}
         <h2 
           ref={headingRef}
-          className="text-section text-white font-bold tracking-tighter mb-16 md:mb-24 will-change-transform"
+          className="text-section text-on-dark font-bold tracking-tighter mb-16 md:mb-24 will-change-transform"
         >
           SELECTED WORKS
         </h2>
@@ -101,60 +99,49 @@ export default function ProjectList() {
                 index % 2 === 1 ? 'lg:flex-row-reverse' : ''
               }`}
             >
-              <h3 className="text-project text-white font-bold tracking-tight group cursor-pointer">
-  <Link href={`/projects/${project.id}`} className="inline-flex items-center gap-4 hover:gap-6 transition-all duration-300">
-    {project.title}
-    <ArrowUpRight className="w-8 h-8 text-white/50 group-hover:text-white transition-colors" />
-  </Link>
-</h3>
+              {/* Single h3 with link (avoids duplicate heading) */}
+              <h3 className="text-project text-on-dark font-bold tracking-tight group cursor-pointer">
+                <Link href={`/projects/${project.id}`} className="inline-flex items-center gap-4 hover:gap-6 transition-all duration-300">
+                  {project.title}
+                  <ArrowUpRight className="w-8 h-8 text-on-dark-muted group-hover:text-on-dark transition-colors" />
+                </Link>
+              </h3>
               {/* Image */}
-              <div 
+              <div
                 className={`project-content ${index % 2 === 1 ? 'lg:order-2' : ''}`}
               >
-                <div className="project-image-wrapper relative aspect-16/10 overflow-hidden rounded-lg bg-white/5">
-                  <img
+                <div className="project-image-wrapper relative aspect-16/10 overflow-hidden rounded-lg bg-muted/20">
+                  <Image
                     src={project.coverImage || ''}
                     alt={project.title}
-                    className="project-image absolute inset-0 w-full h-full object-cover will-change-transform"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="project-image object-cover will-change-transform"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-dark/40 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </div>
-              
+
               {/* Content */}
-              <div 
+              <div
                 className={`project-content ${index % 2 === 1 ? 'lg:order-1' : ''}`}
               >
                 <div className="space-y-6">
-                  {/* Number */}
-                  <div className="text-white/30 text-sm font-mono">
+                  <div className="text-on-dark-muted text-sm font-mono">
                     0{project.id}
                   </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-project text-white font-bold tracking-tight group cursor-pointer">
-                    <span className="inline-flex items-center gap-4 hover:gap-6 transition-all duration-300">
-                      {project.title}
-                      <ArrowUpRight className="w-8 h-8 text-white/50 group-hover:text-white transition-colors" />
-                    </span>
-                  </h3>
-                  
-                  {/* Category */}
                   <p className="text-steel text-lg font-medium">
                     {project.category}
                   </p>
-                  
-                  {/* Description */}
-                  <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-lg">
+                  <p className="text-on-dark-muted text-base md:text-lg leading-relaxed max-w-lg">
                     {project.description}
                   </p>
-                  
-                  {/* Tags */}
                   <div className="flex flex-wrap gap-3 pt-4">
                     {project.tags && project.tags.map((tag) => (
-                      <span 
+                      <span
                         key={tag}
-                        className="px-4 py-2 border border-white/20 rounded-full text-white/60 text-sm hover:border-white/40 hover:text-white transition-colors cursor-default"
+                        className="px-4 py-2 border border-on-dark-muted/40 rounded-full text-on-dark-muted text-sm hover:border-on-dark-muted hover:text-on-dark transition-colors cursor-default"
                       >
                         {tag}
                       </span>
@@ -166,15 +153,16 @@ export default function ProjectList() {
           ))}
         </div>
         
-        {/* View All Link */}
+        {/* View All — placeholder until projects index page exists */}
         <div className="mt-24 md:mt-32 text-center">
-          <a 
-            href="#"
-            className="inline-flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
+          <button
+            aria-label="View all projects (coming soon)"
+            className="inline-flex items-center gap-3 text-on-dark-muted cursor-not-allowed group"
+            disabled
           >
-            <span className="text-lg">View All Projects</span>
+            <span className="text-lg uppercase tracking-widest font-bold">View All Projects</span>
             <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-          </a>
+          </button>
         </div>
       </div>
     </section>

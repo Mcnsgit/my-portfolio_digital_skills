@@ -19,9 +19,10 @@ export default function About() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=350%',
+          end: '+=400%',
           pin: true,
           scrub: 1,
+          anticipatePin: 1
         }
       });
 
@@ -50,21 +51,26 @@ export default function About() {
         0.5
       );
 
-      // --- PHASE 2: THE "READING PAUSE" ---
-      scrollTl.to(textRef.current, { y: -350, duration: 2.5, ease: 'none' }, 1.5);
-        
-      // Parallax effect: The image moves up too, but slightly slower than the text
-      scrollTl.to(imageContainerRef.current, { y: -80, duration: 2.5, ease: 'none' }, 1.5);
-      scrollTl.to(headingRef.current, { y: -40, duration: 2.5, ease: 'none' }, 1.5);
+    
 
-      // --- PHASE 3: EXIT ---
-      // Everything fades out gracefully
-      scrollTl.to([headingRef.current, textRef.current, imageContainerRef.current],
-        { opacity: 0, duration: 1, ease: 'power2.inOut' },
-        4.0 // Starts after the active scroll phase finishes
-      );
+     // --- PHASE 2: ACTIVE SCROLLING ---
+     // Pushes the text up higher (-250) and takes a full 4 seconds of the timeline
+     scrollTl.to(textRef.current, { y: -250, duration: 4, ease: 'none' }, 1.5);
+     scrollTl.to(imageContainerRef.current, { y: -100, duration: 4, ease: 'none' }, 1.5);
+     scrollTl.to(headingRef.current, { y: -50, duration: 4, ease: 'none' }, 1.5);
 
-    }, sectionRef);
+     // --- PHASE 3: THE BUFFER ---
+     // Adds 2 extra seconds of "dead space" at the peak of the scroll so the fading doesn't interrupt the last sentence.
+     scrollTl.to({}, { duration: 2 });
+
+     // --- PHASE 4: EXIT ---
+     // Doesn't start until 7.5 seconds into the scrub timeline
+     scrollTl.to([headingRef.current, textRef.current, imageContainerRef.current],
+       { opacity: 0, duration: 1, ease: 'power2.inOut' },
+       7.5
+     );
+
+   }, sectionRef);
 
 
     return () => ctx.revert();
@@ -90,35 +96,35 @@ export default function About() {
             <div className="order-2 lg:order-1">
               <h2 
                 ref={headingRef}
-                className="text-section text-dark font-bold tracking-tighter mb-8 will-change-transform"
+                className="text-section text-foreground font-bold tracking-tighter mb-8 will-change-transform"
               >
                 ABOUT
               </h2>
               
               <div ref={textRef} className="space-y-6 will-change-transform">
-                <p className="text-dark/80 text-lg md:text-xl leading-relaxed">
+                <p className="text-foreground text-lg md:text-xl leading-relaxed">
                 Multidisciplinary digital professional with 5+ years of experience delivering content strategy, brand identity, accessibility compliance, and user-centered design for nonprofits, social enterprises, and small businesses. Passionate about creating measurable impact through storytelling, community engagement, and inclusive digital experiences, with a focus on WCAG standards and mission-driven solutions that connect and inspire.
                 </p>
                 
-                <p className="text-dark/70 text-base md:text-lg leading-relaxed">
-                  With a background in both editting, marketing and code, I create memorable interactions that 
+                <p className="text-surface-foreground-muted text-base md:text-lg leading-relaxed">
+                  With a background in both editing, marketing and code, I create memorable interactions that 
                   leave a lasting impact. My work spans brand identity, web development, and multimedia content design always with a focus on purpose-driven solutions.
                 </p>
                 
-                <p className="text-dark/60 text-base leading-relaxed">
-                  Currently seeking opportunities in purpose-driven tech and creative roles where 
-                  I can contribute to meaningful projects while continuing to grow developer and editting skills.
+                <p className="text-surface-foreground-muted/90 text-base leading-relaxed">
+                  Currently seeking opportunities in purpose-driven tech and creative roles where
+                  I can contribute to meaningful projects while continuing to grow developer and editing skills.
                 </p>
                 
                 <div className="pt-6 flex flex-wrap gap-4">
-                  <div className="px-4 py-2 border border-dark/20 rounded-full">
-                    <span className="text-dark/70 text-sm">5+ Years Experience</span>
+                  <div className="px-4 py-2 border border-border rounded-full">
+                    <span className="text-surface-foreground-muted text-sm">5+ Years Experience</span>
                   </div>
-                  <div className="px-4 py-2 border border-dark/20 rounded-full">
-                    <span className="text-dark/70 text-sm">Greater Manchester, UK</span>
+                  <div className="px-4 py-2 border border-border rounded-full">
+                    <span className="text-surface-foreground-muted text-sm">Greater Manchester, UK</span>
                   </div>
-                  <div className="px-4 py-2 border border-dark/20 rounded-full">
-                    <span className="text-dark/70 text-sm">Open to Work</span>
+                  <div className="px-4 py-2 border border-border rounded-full">
+                    <span className="text-surface-foreground-muted text-sm">Open to Work</span>
                   </div>
                 </div>
               </div>

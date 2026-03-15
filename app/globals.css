@@ -8,10 +8,10 @@
    1. TAILWIND V4 THEME CONFIGURATION
    ========================================= */
 @theme {
-  /* Colors */
+  /* Colors — design system tokens (OKLCH) */
   --color-background: oklch(0.98 0 0);
   --color-foreground: oklch(0.12 0 0);
-  
+
   --color-primary: oklch(0.35 0.1 260);
   --color-primary-foreground: oklch(0.98 0 0);
 
@@ -23,7 +23,24 @@
 
   --color-border: oklch(0.90 0 0);
   --color-ring: oklch(0.35 0.1 260);
-  
+
+  /* Section surfaces (replace hex dark/light/steel) */
+  --color-dark: oklch(0.12 0.01 260);
+  --color-dark-elevated: oklch(0.16 0.01 260);
+  --color-light: oklch(0.98 0.005 60);
+  --color-steel: oklch(0.45 0.08 250);
+
+  /* Muted text on dark/light sections (avoid gray-on-color) */
+  --color-foreground-muted: oklch(0.72 0.02 260);
+  --color-surface-foreground-muted: oklch(0.38 0.01 60);
+  /* Text on dark sections (Hero, Projects, Skills) */
+  --color-on-dark: oklch(0.98 0 0);
+  --color-on-dark-muted: oklch(0.72 0.02 260);
+
+  /* Scrollbar (theme-aware) */
+  --color-scrollbar: oklch(0.55 0 0 / 0.3);
+  --color-scrollbar-hover: oklch(0.55 0 0 / 0.5);
+
   --radius-lg: 0.5rem;
 }
 
@@ -94,19 +111,23 @@
 @layer components {
   /* Fluid Typography for Hero & Sections */
   .text-hero {
-    font-size: clamp(3rem, 10vw + 1rem, 9rem);
+    font-size: clamp(2rem, 10vw + 1rem, 9rem);
     line-height: 0.9;
     letter-spacing: -0.04em;
     font-weight: 700;
     text-transform: uppercase;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .text-section {
-    font-size: clamp(2.5rem, 6vw + 1rem, 5rem);
+    font-size: clamp(1.75rem, 6vw + 1rem, 5rem);
     line-height: 1;
     letter-spacing: -0.02em;
     font-weight: 700;
     text-transform: uppercase;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .text-project {
@@ -163,7 +184,7 @@
   .custom-cursor.hover {
     width: 4rem;
     height: 4rem;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: oklch(1 0 0 / 0.2);
     backdrop-filter: blur(4px);
   }
 
@@ -242,5 +263,5 @@ html.lenis { height: auto; }
 
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: rgba(115, 115, 115, 0.3); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background-color: rgba(115, 115, 115, 0.5); }
+::-webkit-scrollbar-thumb { background-color: var(--color-scrollbar); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--color-scrollbar-hover); }

@@ -1,6 +1,6 @@
 // lib/skillsData.ts
 "use client";
-import { Palette, Code2, Sparkles, Smartphone, Globe, FileCheck2 } from 'lucide-react';  
+import { Palette, Code2, Sparkles, Globe, FileCheck2 } from 'lucide-react';  
 import type { LucideIcon } from 'lucide-react';
 import figmaIcon from '@/public/icons/figmaIcon.svg';
 
